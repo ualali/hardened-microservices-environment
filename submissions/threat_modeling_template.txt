@@ -1,0 +1,26 @@
+Docker Threat Modeling
+
+1. Spoofing — Docker supports the addition and removal of capabilities. You should remove all capabilities not required for the correct function of the container. Specifically, in the default capability set provided by Docker, the `new_raw` capability should be removed if not explicitly required, as it can give an attacker with access to a container the ability to create spoofed network traffic.
+2. Tampering — Docker provides a TLS CA certificate file to allow secure communication between the Docker server and the client. This file should be protected from any tampering. It is used to authenticate the Docker server based on a given CA certificate. It must therefore be individually owned and group-owned by root to ensure that it cannot be modified by less privileged users to avoid tampering.
+3. Information Disclosure — API keys and database passwords must be kept secure to prevent attackers gaining access. The container file system should be set to read-only.
+4. Denial of Service — By default, a container can use all of the memory on the host. You can use memory limit mechanisms to prevent a denial of service from occurring, where one container consumes all of the host’s resources and other containers on the same host are therefore not able to function. **Denial of Service** protection could result in exhausting resources needed to provide the service and lead to an outage.
+5. Elevation of Privilege — Due to traffic network spoofing, an attacker can gain access to the host and other containers. Unnecessary packages should not be installed in the container.
+
+Kubernetes Threat Modeling
+
+1. Spoofing — Kubernetes ships with insecure defaults, for example, all pods have `CAP_NET_RAW` permissions. This allows all pods to open raw sockets and inject malicious packets into the Kubernetes container network, which may lead to spoofing.
+2. Repudiation — Kubernetes natively doesn't allow certificate revocation, which may lead to repudiation if a certificate cannot be revoked when necessary.
+3. Denial of Service — Kubernetes ships without an upper limit for setting the memory footprint. This may lead to a denial of service which could result in exhausting resources needed to run the pod.
+4. Information Disclosure — Major approaches focuses on being able to read secret data from the cluster directly by exploiting misconfigured RBAC permissions. Other approaches include viewing sensitive data stored within logs and eavesdropping on network traffic.
+5. Elevation of Privilege — Several Kubernetes distributions have made the decision that they don’t consider malicious containers part of their threat model. As such, once an attacker has that level of access then there are minimal controls, by default, stopping them from getting full cluster-admin rights. Ensure that all management ports visible oin the cluster network require authentication for all users.
+
+Docker-bench Run Results and Analysis
+From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
+
+References:
+- Web Parameter Tampering, OWASP, https://owasp.org/www-community/attacks/Web_Parameter_Tampering
+- Repudiation Attack, OWASP, https://owasp.org/www-community/attacks/Repudiation_Attack
+- wstg, OWASP Github, https://github.com/OWASP/wstg/blob/master/document/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/README.md,
+- Building a Secure Software Supply Chain using Docker, Simon Lipke, https://hdms.bsz-bw.de/frontdoor/deliver/index/docId/6321/file/20170830_thesis_final.pdf
+- Securing Container using Threat Modelling, J. Avinash, https://logicbomb.medium.com/securing-container-using-threat-modelling-stride-a80c97d12994
+- Container Infrastructure Threat Modelling, A. Vijayanand, https://medium.com/csg-govtech/container-infrastructure-threat-modelling-8fa7315d861d
