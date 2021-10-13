@@ -6,6 +6,7 @@ Docker Threat Modeling
 4. Denial of Service — By default, a container can use all of the memory on the host. You can use memory limit mechanisms to prevent a denial of service from occurring, where one container consumes all of the host’s resources and other containers on the same host are therefore not able to function. **Denial of Service** protection could result in exhausting resources needed to provide the service and lead to an outage.
 5. Elevation of Privilege — Due to traffic network spoofing, an attacker can gain access to the host and other containers. Unnecessary packages should not be installed in the container.
 
+
 Kubernetes Threat Modeling
 
 1. Spoofing — Kubernetes ships with insecure defaults, for example, all pods have `CAP_NET_RAW` permissions. This allows all pods to open raw sockets and inject malicious packets into the Kubernetes container network, which may lead to spoofing.
@@ -14,8 +15,32 @@ Kubernetes Threat Modeling
 4. Information Disclosure — Major approaches focuses on being able to read secret data from the cluster directly by exploiting misconfigured RBAC permissions. Other approaches include viewing sensitive data stored within logs and eavesdropping on network traffic.
 5. Elevation of Privilege — Several Kubernetes distributions have made the decision that they don’t consider malicious containers part of their threat model. As such, once an attacker has that level of access then there are minimal controls, by default, stopping them from getting full cluster-admin rights. Ensure that all management ports visible oin the cluster network require authentication for all users.
 
+
 Docker-bench Run Results and Analysis
-From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
+[FAIL] 2.2 Ensure the logging level is set to 'info' (Scored)
+According to the CIS Docker Benchmark v1.2:
+Set Docker daemon log level to info.
+
+Setting up an appropriate log level, configures the Docker daemon to log events that you would want to review later.
+A base log level of info and above would capture all logs except debug logs. Until and unless required, you should not run Docker daemon at debug log level.
+
+[FAIL] 2.17.b Ensure that the container is restricted from acquiring additional privileges (Scored)
+According to the CIS Docker Benchmark v1.2:
+By default you should restrict containers from acquiring additional privileges via suid or sgid.
+
+A process can set the no_new_priv bit in the kernel and this persists across forks, clones and execve. The no_new_priv bit ensures that the process and its
+child processes do not gain any additional privileges via suid or sgid bits. This reduces the security risks associated with many dangerous operations
+because there is a much reduced ability to subvert privileged binaries.
+
+Setting this at the daemon level ensures that by default all new containers are restricted from acquiring new privileges.
+
+[FAIL] 4.5 Ensure Content trust for Docker is Enabled (Scored)
+According to the CIS Docker Benchmark v1.2:
+Content trust is disabled by default and should be enabled in line with organizational security policy.
+
+Content trust provides the ability to use digital signatures for data sent to and receivedfrom remote Docker registries. These signatures allow client-side
+verification of the identity and the publisher of specific image tags and ensures the provenance of container images.
+
 
 References:
 - Web Parameter Tampering, OWASP, https://owasp.org/www-community/attacks/Web_Parameter_Tampering
