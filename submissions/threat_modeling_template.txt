@@ -24,3 +24,4 @@ References:
 - Building a Secure Software Supply Chain using Docker, Simon Lipke, https://hdms.bsz-bw.de/frontdoor/deliver/index/docId/6321/file/20170830_thesis_final.pdf
 - Securing Container using Threat Modelling, J. Avinash, https://logicbomb.medium.com/securing-container-using-threat-modelling-stride-a80c97d12994
 - Container Infrastructure Threat Modelling, A. Vijayanand, https://medium.com/csg-govtech/container-infrastructure-threat-modelling-8fa7315d861d
+- Hardening Guide with CIS 1.6 Benchmark, Rancher, https://rancher.com/docs/rancher/v2.5/en/security/rancher-2.5/1.6-hardening-2.5/
