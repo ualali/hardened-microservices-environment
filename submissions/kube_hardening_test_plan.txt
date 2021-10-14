@@ -1,0 +1,12 @@
+How will you test the changes?
+A sandbox environmet will be used to test changes to the cluster. This will protect production systems from being interrupted or corrupted.
+This is good practice that we can implement as part of our deployment strategy and Software Development Lifecycle.
+
+How will you ensure the changes don't negatively affect your cluster?
+Using our sandbox environmet we will tests changes so we can monitor and observe the impact of those changes.
+Once changes are deployed to the sandbox environmet, we can monitor metrics using Prometheus and Grafana.
+Also, we can collect logs and traces to determine the root cause of problems and troubleshoot more eficiently.
+Historical observability in the form of a changelog will be used to construct a continuous changelog that allows us not only
+to understand historical events, but also to trace how historical changes impact the current state of our cluster.
+Our overall focus will be on the state of our cluster as a whole, and not in individual components in isolation to gain a full
+overview of our cluster.

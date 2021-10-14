@@ -25,27 +25,9 @@ Vagrant.configure("2") do |config|
         v.memory = 2048
         v.cpus = 2
       end
-
-    config.vm.provision "apparmor", type: "shell",
-      inline: "sudo zypper --non-interactive install -t pattern apparmor"
     
-    config.vm.provision "docker", type: "shell",
-      inline: <<-SHELL
-        sudo zypper --non-interactive install docker
-        systemctl enable docker
-        usermod -G docker -a $USER
-        systemctl restart docker
-      SHELL
-
-    config.vm.provision "go", type: "shell",
-      inline: <<-SHELL
-        sudo zypper --non-interactive install git binutils bison gcc make
-        sudo -u $USER -H bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
-        sudo -u $USER -H bash -c 'echo "source $HOME/.gvm/scripts/gvm" >> $HOME/.bashrc'
-        sudo -u $USER -H bash -c 'source $HOME/.gvm/scripts/gvm; gvm install go1.4 -B'
-        sudo -u $USER -H bash -c 'source $HOME/.gvm/scripts/gvm; gvm install go1.17.2 -B'
-        sudo -u $USER -H bash -c 'source $HOME/.gvm/scripts/gvm; gvm use go1.17.2 --default'
-      SHELL
+    config.vm.provision "bootstrap", type: "shell",
+      path: "scripts/bootstrap.sh"
     end
   end
 end
